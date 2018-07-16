@@ -5,7 +5,6 @@ os:
 env:
   matrix:
     - CPU="esp8266" BOARD="esp8266com:esp8266:generic:CpuFrequency=80,FlashSize=1M0,FlashMode=qio,FlashFreq=80"
-    - CPU="esp8266" BOARD="esp8266com:esp8266:generic:CpuFrequency=80,Debug=Serial1"
     - CPU="esp32" BOARD="espressif:esp32:esp32:FlashFreq=80"
 
 script:
