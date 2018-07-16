@@ -19,7 +19,7 @@
 WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
 
-HardwareSerial Serial1(2);
+//HardwareSerial Serial1(2);
 
 #define USE_SERIAL Serial1
 
