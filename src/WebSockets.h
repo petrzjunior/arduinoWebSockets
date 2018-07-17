@@ -86,7 +86,7 @@
 #define NETWORK_W5100           (2)
 #define NETWORK_ENC28J60        (3)
 #define NETWORK_ESP32           (4)
-#define NETWORK_ESP32_ASYNC     (4)
+#define NETWORK_ESP32_ASYNC     (5)
 
 // max size of the WS Message Header
 #define WEBSOCKETS_MAX_HEADER_SIZE  (14)
