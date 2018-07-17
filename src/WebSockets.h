@@ -171,6 +171,13 @@
 #define WEBSOCKETS_NETWORK_CLASS WiFiClient
 #define WEBSOCKETS_NETWORK_SERVER_CLASS WiFiServer
 
+#elif (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
+
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#define WEBSOCKETS_NETWORK_CLASS AsyncTCPBuffer
+#define WEBSOCKETS_NETWORK_SERVER_CLASS AsyncServer
+
 #else
 #error "no network type selected!"
 #endif
@@ -265,7 +272,7 @@ typedef struct {
         bool cHttpHeadersValid; ///< non-websocket http header validity indicator
         size_t cMandatoryHeadersCount; ///< non-websocket mandatory http headers present count
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
         String cHttpLine;   ///< HTTP header lines
 #endif
 

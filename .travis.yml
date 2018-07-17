@@ -18,6 +18,11 @@ script:
   - which arduino
   - mkdir -p $HOME/Arduino/libraries
   - cp -r $TRAVIS_BUILD_DIR $HOME/Arduino/libraries/arduinoWebSockets
+
+  - wget -O AsyncTCP.zip https://github.com/petrzjunior/AsyncTCP/archive/master.zip
+  - unzip AsyncTCP.zip -d $HOME
+  - mv $HOME/AsyncTCP-master $HOME/Arduino/libraries/AsyncTCP
+
   - source $TRAVIS_BUILD_DIR/travis/common.sh
   - get_core $CPU
   - cd $TRAVIS_BUILD_DIR
