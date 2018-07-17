@@ -56,7 +56,7 @@ class WebSocketsClient: private WebSockets {
         void beginSocketIOSSL(String host, uint16_t port, String url = "/socket.io/?EIO=3", String protocol = "arduino");
 #endif
 
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC && WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32_ASYNC)
         void loop(void);
 #else
         // Async interface not need a loop call
@@ -105,7 +105,7 @@ class WebSocketsClient: private WebSockets {
         void clientDisconnect(WSclient_t * client);
         bool clientIsConnected(WSclient_t * client);
 
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC && WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32_ASYNC)
         void handleClientData(void);
 #endif
 
@@ -115,7 +115,7 @@ class WebSocketsClient: private WebSockets {
         void connectedCb();
         void connectFailedCb();
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
         void asyncConnect();
 #endif
 
