@@ -175,6 +175,7 @@
 
 #include <WiFi.h>
 #include <AsyncTCP.h>
+#include <AsyncTCPbuffer.h>
 #define WEBSOCKETS_NETWORK_CLASS AsyncTCPbuffer
 #define WEBSOCKETS_NETWORK_SERVER_CLASS AsyncServer
 
