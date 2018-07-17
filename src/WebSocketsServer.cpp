@@ -33,7 +33,7 @@ WebSocketsServer::WebSocketsServer(uint16_t port, String origin, String protocol
 
     _server = new WEBSOCKETS_NETWORK_SERVER_CLASS(port);
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
     _server->onClient([](void *s, AsyncClient* c){
         ((WebSocketsServer*)s)->newClient(new AsyncTCPbuffer(c));
     }, this);
@@ -88,7 +88,7 @@ void WebSocketsServer::begin(void) {
 
         client->cWsRXsize = 0;
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
         client->cHttpLine = "";
 #endif
     }
@@ -123,7 +123,7 @@ void WebSocketsServer::close(void) {
 
 }
 
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC && WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32_ASYNC)
 /**
  * called in arduino loop
  */
@@ -421,7 +421,7 @@ int WebSocketsServer::connectedClients(bool ping) {
     return count;
 }
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
 /**
  * get an IP for a client
  * @param num uint8_t client id
@@ -462,12 +462,12 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient) {
             client->isSSL = false;
             client->tcp->setNoDelay(true);
 #endif
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC && WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32_ASYNC)
             // set Timeout for readBytesUntil and readStringUntil
             client->tcp->setTimeout(WEBSOCKETS_TCP_TIMEOUT);
 #endif
             client->status = WSC_HEADER;
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32) || (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
             IPAddress ip = client->tcp->remoteIP();
             DEBUG_WEBSOCKETS("[WS-Server][%d] new client from %d.%d.%d.%d\n", client->num, ip[0], ip[1], ip[2], ip[3]);
 #else
@@ -475,7 +475,7 @@ bool WebSocketsServer::newClient(WEBSOCKETS_NETWORK_CLASS * TCPclient) {
 #endif
 
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
             client->tcp->onDisconnect(std::bind([](WebSocketsServer * server, AsyncTCPbuffer * obj, WSclient_t * client) -> bool {
                 DEBUG_WEBSOCKETS("[WS-Server][%d] Disconnect client\n", client->num);
 
@@ -550,12 +550,12 @@ void WebSocketsServer::clientDisconnect(WSclient_t * client) {
 
     if(client->tcp) {
         if(client->tcp->connected()) {
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC && WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32_ASYNC)
             client->tcp->flush();
 #endif
             client->tcp->stop();
         }
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
         client->status = WSC_NOT_CONNECTED;
 #else
         delete client->tcp;
@@ -572,7 +572,7 @@ void WebSocketsServer::clientDisconnect(WSclient_t * client) {
 
     client->cWsRXsize = 0;
 
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
     client->cHttpLine = "";
 #endif
 
@@ -616,7 +616,7 @@ bool WebSocketsServer::clientIsConnected(WSclient_t * client) {
 
     return false;
 }
-#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP8266_ASYNC && WEBSOCKETS_NETWORK_TYPE != NETWORK_ESP32_ASYNC)
 /**
  * Handle incoming Connection Request
  */
@@ -773,7 +773,7 @@ void WebSocketsServer::handleHeader(WSclient_t * client, String * headerLine) {
 		}
 
         (*headerLine) = "";
-#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC)
+#if (WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP8266_ASYNC || WEBSOCKETS_NETWORK_TYPE == NETWORK_ESP32_ASYNC)
         client->tcp->readStringUntil('\n', &(client->cHttpLine), std::bind(&WebSocketsServer::handleHeader, this, client, &(client->cHttpLine)));
 #endif
     } else {
